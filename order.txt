@@ -1,0 +1,24 @@
+# QR Theory v6.00 - Kapitelreihenfolge
+# Diese Datei definiert die Reihenfolge der einzubindenden Kapitel
+
+# Hauptkapitel
+chapters/01_introduction.tex
+chapters/02_mathematical_foundation.tex
+chapters/03_field_equations.tex
+chapters/04_parameter_reduction.tex
+chapters/05_string_corrections.tex
+chapters/06_empirical_validation.tex
+chapters/07_experimental_predictions.tex
+chapters/08_comparison_theories.tex
+chapters/09_discussion.tex
+chapters/10_conclusions.tex
+
+# Anhänge
+appendices/appendix_a_derivations.tex
+appendices/appendix_b_numerical.tex
+appendices/appendix_c_parameters.tex
+appendices/appendix_d_validations.tex
+appendices/appendix_e_constants.tex
+
+# Bibliographie
+bibliography/qr_references.bib
