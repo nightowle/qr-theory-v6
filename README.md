@@ -208,7 +208,7 @@ We welcome contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 **Author**: Frank Kannstädter  
 **Institution**: Independent Researcher in Theoretical Physics  
 **Location**: Frankfurt am Main, Germany  
-**Email**: frank.kannstaedter@email.com
+**Email**: frankkannstaedter@icloud.com
 
 ### Issues & Discussion
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/username/qr-theory/issues)
