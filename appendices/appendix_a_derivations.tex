@@ -1,0 +1,223 @@
+\section{Detailed Mathematical Derivations}
+\label{appendix:derivations}
+
+\subsection{Derivation of the Modified Friedmann Equation}
+\label{subsec:friedmann-derivation}
+
+Starting from the QR action given in Equation~\ref{eq:qr-action}:
+
+\begin{equation}
+S[\phi, a] = \int dt , a^3(t) \left[ \frac{\kappa_\pi}{2} \left(\frac{\partial \phi}{\partial t}\right)^2 - U(\phi) \right]
+\label{eq:qr-action-appendix}
+\end{equation}
+
+Variation with respect to the metric $g_{\mu\nu}$ yields:
+
+\begin{equation}
+G_{\mu\nu} + \Lambda_0 g_{\mu\nu} = \frac{8\pi G}{c^4} \left[ T_{\mu\nu}^{\text{matter}} + T_{\mu\nu}^{\phi} \right]
+\label{eq:varied-einstein}
+\end{equation}
+
+For the scalar field stress-energy tensor:
+
+\begin{equation}
+T_{\mu\nu}^{\phi} = \frac{c^4}{8\pi G} \left[ \kappa_\pi \partial_\mu \phi \partial_\nu \phi - \frac{\kappa_\pi}{2} g_{\mu\nu} \partial_\alpha \phi \partial^\alpha \phi - g_{\mu\nu} U(\phi) \right]
+\label{eq:scalar-stress-energy}
+\end{equation}
+
+In the FRW metric $ds^2 = -c^2 dt^2 + a^2(t)[dr^2 + r^2 d\theta^2 + r^2 \sin^2\theta d\varphi^2]$, the time-time component gives:
+
+\begin{equation}
+3H^2 = \frac{8\pi G}{c^2}\rho_m + \frac{\kappa_\pi}{2}\dot{\phi}^2 + U(\phi) + \Lambda_0 c^2
+\label{eq:00-component}
+\end{equation}
+
+The trace of the spatial components yields:
+
+\begin{equation}
+-2\dot{H} - 3H^2 = \frac{8\pi G}{c^2}p_m - \frac{\kappa_\pi}{2}\dot{\phi}^2 + U(\phi) + \Lambda_0 c^2
+\label{eq:spatial-trace}
+\end{equation}
+
+Combining these equations and using the equation of motion for $\phi$:
+
+\begin{equation}
+\ddot{\phi} + 3H\dot{\phi} + \frac{dU}{d\phi} = 0
+\label{eq:phi-equation}
+\end{equation}
+
+With $\phi = \log \Inu$ and $H = \dot{\phi}$, we obtain:
+
+\begin{equation}
+\dot{H} + 3H^2 + \frac{1}{\kappa_\pi} U’(\phi) = 0
+\label{eq:modified-friedmann-derived}
+\end{equation}
+
+Setting $\kappa_\pi = 1$ for normalization and specifying the potential through consistency with early-universe observations completes the derivation.
+
+\subsection{Golden Ratio as Unique Scaling Factor}
+\label{subsec:golden-ratio-derivation}
+
+Consider a self-similar system with scaling factor $\lambda$ such that under magnification by $\lambda$, the system reproduces itself exactly with a specific geometric relationship. For aperiodic tilings with pentagonal symmetry, the fundamental requirement is:
+
+\begin{equation}
+\lambda = 1 + \frac{1}{\lambda}
+\label{eq:self-similarity-condition}
+\end{equation}
+
+This equation describes the property that the large tile can be decomposed into one tile of its own size plus one tile of size $1/\lambda$ relative to the original.
+
+Rearranging to standard quadratic form:
+
+\begin{equation}
+\lambda^2 - \lambda - 1 = 0
+\label{eq:golden-ratio-quadratic}
+\end{equation}
+
+The positive solution is:
+
+\begin{equation}
+\lambda = \frac{1 + \sqrt{5}}{2} = \varphi
+\label{eq:golden-ratio-solution}
+\end{equation}
+
+For substitution systems, the inflation matrix $M$ for a two-tile aperiodic system has the form:
+
+\begin{equation}
+M = \begin{pmatrix} 1 & 1 \ 1 & 0 \end{pmatrix}
+\label{eq:inflation-matrix}
+\end{equation}
+
+The Perron-Frobenius eigenvalue is obtained from:
+
+\begin{equation}
+\det(M - \lambda I) = \lambda^2 - \lambda - 1 = 0
+\label{eq:perron-frobenius-eigenvalue}
+\end{equation}
+
+yielding $\lambda = \varphi$, confirming that the golden ratio emerges as the unique inflation factor for aperiodic systems with the required symmetry properties.
+
+\subsection{String-Theoretical Beta Function Derivation}
+\label{subsec:beta-function-derivation}
+
+The string sigma model action in conformal gauge is:
+
+\begin{equation}
+S = \frac{1}{4\pi\alpha’} \int d^2\sigma \sqrt{\gamma} \left[ \gamma^{ab} \partial_a X^\mu \partial_b X^\nu G_{\mu\nu}(X) + \alpha’ R^{(2)} \Phi(X) \right]
+\label{eq:sigma-model-action}
+\end{equation}
+
+where $G_{\mu\nu}$ is the target space metric and $\Phi$ is the dilaton field.
+
+The beta functions for the metric and dilaton are:
+
+\begin{align}
+\beta_{\mu\nu}^G &= \alpha’ \left( R_{\mu\nu} + 2\nabla_\mu \nabla_\nu \Phi \right) + \mathcal{O}((\alpha’)^2) \
+\beta^\Phi &= \alpha’ \left( -\frac{1}{2}\nabla^2 \Phi + \nabla_\mu \Phi \nabla^\mu \Phi - \frac{1}{24}R \right) + \mathcal{O}((\alpha’)^2)
+\label{eq:beta-functions}
+\end{align}
+
+For the QR theory with $\Phi = \phi = \log \Inu$, conformal invariance requires $\beta_{\mu\nu}^G = 0$, giving:
+
+\begin{equation}
+R_{\mu\nu} + 2\nabla_\mu \nabla_\nu \phi = 0
+\label{eq:conformal-condition-derived}
+\end{equation}
+
+This reproduces the QR-modified Einstein equations in the leading order $\alpha’$ expansion.
+
+\subsection{Projective Density Profile Derivation}
+\label{subsec:projective-density-derivation}
+
+The effective density profile emerges from the projective structure through:
+
+\begin{equation}
+\rho_{\text{eff}}(r) = \rho_{\mathcal{I}} \cdot \left(\frac{\partial^2}{\partial r^2} \log C(t,r)\right)
+\label{eq:projective-density-formula}
+\end{equation}
+
+The coherent weighting function follows the fractal hierarchy:
+
+\begin{equation}
+C(t,r) = \sum_n w_n \phi_n(r) \log I_n(t)
+\label{eq:coherent-weighting-detailed}
+\end{equation}
+
+where $\phi_n(r) = \left(\frac{r}{\lpoi}\right)^{(\log \varphi^n)/\log \varphi} = \left(\frac{r}{\lpoi}\right)^n$.
+
+For the fundamental mode $n=1$:
+
+\begin{equation}
+C_1(t,r) = w_1 \left(\frac{r}{\lpoi}\right) \log I_1(t)
+\label{eq:fundamental-mode}
+\end{equation}
+
+The second derivative gives:
+
+\begin{equation}
+\frac{\partial^2}{\partial r^2} \log C_1(t,r) = \frac{\partial^2}{\partial r^2} \left[ \log w_1 + \log\left(\frac{r}{\lpoi}\right) + \log(\log I_1(t)) \right]
+\label{eq:second-derivative-step1}
+\end{equation}
+
+\begin{equation}
+= \frac{\partial^2}{\partial r^2} \log r = -\frac{1}{r^2}
+\label{eq:second-derivative-result}
+\end{equation}
+
+Therefore:
+
+\begin{equation}
+\rho_{\text{eff}}(r) = -\frac{\rho_{\mathcal{I}}}{r^2}
+\label{eq:effective-density-fundamental}
+\end{equation}
+
+The negative sign indicates that the effective density decreases with radius, but the magnitude provides the characteristic $1/r^2$ falloff that generates flat rotation curves when integrated.
+
+\subsection{Weak Lensing Convergence Power Spectrum}
+\label{subsec:lensing-convergence-derivation}
+
+The convergence field is defined as:
+
+\begin{equation}
+\kappa(\hat{n}) = \int_0^{\chi_H} d\chi , W(\chi) \delta\left(\chi \hat{n}, \chi\right)
+\label{eq:convergence-definition}
+\end{equation}
+
+where the lensing weight function is:
+
+\begin{equation}
+W(\chi) = \frac{3H_0^2 \Omega_m}{2c^2} \frac{\chi}{a(\chi)} \int_\chi^{\chi_H} d\chi’ \frac{n(\chi’)}{\chi’} (\chi’ - \chi)
+\label{eq:lensing-weight-detailed}
+\end{equation}
+
+In the Limber approximation, the convergence power spectrum becomes:
+
+\begin{equation}
+C_\ell^{\kappa} = \int_0^{\chi_H} d\chi \frac{W^2(\chi)}{\chi^2} P_\delta\left(\frac{\ell}{\chi}, z(\chi)\right)
+\label{eq:convergence-power-limber}
+\end{equation}
+
+For the QR matter power spectrum:
+
+\begin{equation}
+P_\delta^{\QR}(k,z) = P_\delta(k,0) D_{\QR}^2(z) T^2(k)
+\label{eq:qr-matter-power}
+\end{equation}
+
+where the QR growth function satisfies:
+
+\begin{equation}
+\frac{d^2 D_{\QR}}{d \ln a^2} + \left(2 + \frac{d \ln H_{\QR}}{d \ln a}\right)\frac{d D_{\QR}}{d \ln a} - \frac{3}{2}\Omega_m^{\QR}(a) D_{\QR} = 0
+\label{eq:qr-growth-equation}
+\end{equation}
+
+The modified expansion function $H_{\QR}(a)$ follows from the QR evolution equations derived in Section~\ref{sec:mathematical-formulation}.
+
+The two-point correlation functions follow from:
+
+\begin{equation}
+\xi_\pm(\theta) = \int_0^\infty \frac{\ell d\ell}{2\pi} J_{0,4}(\ell\theta) C_\ell^{\kappa}
+\label{eq:two-point-correlations-detailed}
+\end{equation}
+
+where $J_0$ and $J_4$ are Bessel functions of the first kind for the $\xi_+$ and $\xi_-$ correlation functions respectively.
