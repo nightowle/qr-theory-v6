@@ -1,0 +1,194 @@
+% macros.tex - Einheitliche Präambel für QR-Theorie v6.00
+% Optimiert für pdfLaTeX und GitHub Actions
+
+% Dokumentklasse und Grundeinstellungen
+\documentclass[11pt,a4paper,twoside]{article}
+
+% Encoding und Sprache
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman,english]{babel}
+\usepackage{microtype}
+\usepackage{csquotes}
+
+% Seitenlayout
+\usepackage[margin=2.5cm,bindingoffset=0.5cm]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+
+% Mathematik
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{physics}
+\numberwithin{equation}{section}
+
+% Abbildungen und Tabellen
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Einheiten und Zahlen
+\usepackage{siunitx}
+\sisetup{
+    separate-uncertainty=true,
+    per-mode=symbol,
+    range-phrase={--},
+    list-final-separator={, and }
+}
+
+% Farben und Layout
+\usepackage{xcolor}
+\definecolor{qrblue}{RGB}{0,102,204}
+\definecolor{qrred}{RGB}{204,0,51}
+\definecolor{qrgreen}{RGB}{0,153,76}
+
+% Hyperlinks und Referenzen
+\usepackage[hidelinks,colorlinks=true,linkcolor=qrblue,citecolor=qrred,urlcolor=qrgreen]{hyperref}
+\usepackage{cleveref}
+
+% Bibliographie
+\usepackage[backend=biber,style=authoryear-comp,doi=false,isbn=false,url=true,maxbibnames=3]{biblatex}
+\addbibresource{bibliography/qr_references.bib}
+
+% Algorithmen und Code
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{listings}
+\lstset{
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    captionpos=b
+}
+
+% Spezielle Pakete für Physik
+\usepackage{tensor}
+\usepackage{slashed}
+
+% Grafiken Pfad
+\graphicspath{{figures/}{./}}
+
+% QR-Theorie spezifische Makros
+\newcommand{\QR}{\text{QR}}
+\newcommand{\LCDM}{\Lambda\text{CDM}}
+\newcommand{\Inu}{I_\nu}
+\newcommand{\lpoi}{\ell_\pi}
+\newcommand{\varphi}{\varphi}
+\newcommand{\mathcalI}{\mathcal{I}}
+\newcommand{\mathcalO}{\mathcal{O}}
+\newcommand{\mathcalW}{\mathcal{W}}
+\newcommand{\mathcalS}{\mathcal{S}}
+\newcommand{\mathcalF}{\mathcal{F}}
+
+% Mathematische Operatoren
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\sign}{sign}
+
+% Theoremumgebungen
+\theoremstyle{definition}
+\newtheorem{axiom}{Axiom}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+\newtheorem{example}{Example}[section]
+
+% Spezielle Befehle für QR-Notation
+\newcommand{\qroperator}[1]{\mathcal{O}^{(#1)}}
+\newcommand{\projweight}[1]{\mathcal{W}(#1)}
+\newcommand{\infodensity}[1]{I_\nu(#1)}
+\newcommand{\loginfo}[1]{\phi(#1)}
+\newcommand{\goldenratio}{\varphi}
+\newcommand{\scalehierarchy}[1]{\lambda_{#1}}
+
+% Einheiten-Makros
+\newcommand{\kmsmpc}{\si{\km\per\s\per\Mpc}}
+\newcommand{\Mpc}{\si{\Mpc}}
+\newcommand{\Gpc}{\si{\Gpc}}
+\newcommand{\arcmin}{\si{\arcminute}}
+
+% Spezielle QR-Gleichungen
+\newcommand{\qrfieldequation}{G_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^4} T_{\mu\nu}^{\text{eff}}}
+\newcommand{\qrstressenergy}{T_{\mu\nu}^{\QR} = \frac{c^4}{8\pi G} \left[ (\log \Inu)^2 \phi^2 g_{\mu\nu} + \nabla_\mu \phi \nabla_\nu \phi - \frac{1}{2} g_{\mu\nu} \nabla_\alpha \phi \nabla^\alpha \phi \right]}
+
+% Titelseiten-Makros
+\newcommand{\qrtitle}{The QR Theory v6.00: A Complete Synthesis of Quantum Mechanics and General Relativity through Projective Information Dynamics}
+\newcommand{\qrauthor}{Frank Kannstädter}
+\newcommand{\qraffiliation}{Independent Researcher in Theoretical Physics, Frankfurt am Main, Germany}
+
+% Abstract-Umgebung
+\newenvironment{qrabstract}
+{\begin{quotation}\noindent\textbf{Abstract:}\space}
+{\end{quotation}}
+
+% Keywords-Makro
+\newcommand{\qrkeywords}[1]{\noindent\textbf{Keywords:} #1}
+
+% Inhaltsverzeichnis-Anpassungen
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+% Abbildungs- und Tabellenbeschriftungen
+\captionsetup{
+    font=small,
+    labelfont=bf,
+    format=plain,
+    justification=centering
+}
+
+% Spezielle Umgebungen für QR-Axiome
+\newenvironment{qraxiom}[1]
+{\begin{axiom}[#1]\itshape}
+{\end{axiom}}
+
+% Validierungs-Tabellen
+\newcommand{\validationtable}[4]{
+\begin{table}[H]
+\centering
+\caption{#1}
+\label{#2}
+\begin{tabular}{#3}
+#4
+\end{tabular}
+\end{table}
+}
+
+% Residuen-Plot Makro
+\newcommand{\residualplot}[2]{
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{#1}
+\caption{#2}
+\label{fig:residual}
+\end{figure}
+}
+
+% Fehlende Pakete Warnung unterdrücken
+\usepackage{silence}
+\WarningFilter{latex}{You have requested package}
+
+% TODO-Notizen (für Entwicklung, später entfernen)
+\usepackage{todonotes}
+\newcommand{\qrtodo}[1]{\todo[color=yellow!40]{QR: #1}}
+
+% Finale Einstellungen
+\raggedbottom
+\frenchspacing
+
+% End of macros.tex
