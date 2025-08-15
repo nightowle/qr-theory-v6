@@ -1,0 +1,192 @@
+% macros.tex – Einheitliche Präambel für QR-Theorie v6.00
+% Optimiert für pdfLaTeX & GitHub Actions
+% Keine \documentclass hier; steht in main.tex.
+
+% ---------- Encoding & Sprache ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman,english]{babel}
+\usepackage{microtype}
+\usepackage{csquotes}
+
+% ---------- Seitenlayout ----------
+\usepackage[margin=2.5cm,bindingoffset=0.5cm]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+\setlength{\headheight}{14.5pt}
+\addtolength{\topmargin}{-2.5pt}
+
+% ---------- Mathematik ----------
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{physics}
+\numberwithin{equation}{section}
+
+% ---------- Abbildungen & Tabellen ----------
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% ---------- Einheiten & Zahlen (siunitx v3) ----------
+\usepackage{siunitx}
+\sisetup{
+  uncertainty-mode = separate,
+  per-mode = symbol,
+  range-phrase = {---},
+  list-final-separator = {, and }
+}
+\AtBeginDocument{\RenewCommandCopy\qty\SI} % nur 1x!
+\DeclareSIUnit\parsec{pc}
+\DeclareSIUnit\astronomicalunit{au}
+\DeclareSIUnit\lightyear{ly}
+\DeclareSIUnit\Mpc{Mpc}
+\DeclareSIUnit\Gpc{Gpc}
+
+% ---------- Farben ----------
+\usepackage{xcolor}
+\definecolor{qrblue}{RGB}{0,102,204}
+\definecolor{qrred}{RGB}{204,0,51}
+\definecolor{qrgreen}{RGB}{0,153,76}
+
+% ---------- Hyperlinks & Referenzen ----------
+\usepackage[colorlinks=true,linkcolor=qrblue,citecolor=qrred,urlcolor=qrgreen]{hyperref}
+\usepackage{cleveref}
+
+% ---------- Bibliographie ----------
+\usepackage[backend=biber,style=authoryear-comp,doi=false,isbn=false,url=true,maxbibnames=3]{biblatex}
+\addbibresource{bibliography/qr_references.bib}
+
+% ---------- Algorithmen & Code ----------
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{listings}
+\lstset{
+  basicstyle=\footnotesize\ttfamily,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  captionpos=b
+}
+
+% ---------- Spezielle Physik-Pakete ----------
+\usepackage{tensor}
+\usepackage{slashed}
+
+% ---------- Grafikpfade ----------
+\graphicspath{{figures/}{./}}
+
+% ---------- QR-Theorie spezifische Makros ----------
+\newcommand{\QR}{\text{QR}}
+\newcommand{\LCDM}{\Lambda\text{CDM}}
+\newcommand{\Inu}{I_\nu}
+\newcommand{\lpoi}{\ell_\pi}
+\newcommand{\mathcalI}{\mathcal{I}}
+\newcommand{\mathcalO}{\mathcal{O}}
+\newcommand{\mathcalW}{\mathcal{W}}
+\newcommand{\mathcalS}{\mathcal{S}}
+\newcommand{\mathcalF}{\mathcal{F}}
+
+% Mathematische Operatoren
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\sign}{sign}
+
+% Theorem-Umgebungen
+\theoremstyle{definition}
+\newtheorem{axiom}{Axiom}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+\newtheorem{example}{Example}[section]
+
+% QR-Notation
+\newcommand{\qroperator}[1]{\mathcal{O}^{(#1)}}
+\newcommand{\projweight}[1]{\mathcal{W}(#1)}
+\newcommand{\infodensity}[1]{I_\nu(#1)}
+\newcommand{\loginfo}[1]{\varphi(#1)} % konsistent zur goldenen Ratio
+\newcommand{\goldenratio}{\varphi}
+\newcommand{\scalehierarchy}[1]{\lambda_{#1}}
+
+% Einheiten-Makros
+\newcommand{\kmsmpc}{\si{\kilo\metre\per\second\per\Mpc}}
+\newcommand{\arcmin}{\si{\arcminute}}
+
+% QR-Gleichungen (Symbolik)
+\newcommand{\qrfieldequation}{G_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^4} T_{\mu\nu}^{\text{eff}}}
+\newcommand{\qrstressenergy}{T_{\mu\nu}^{\QR} = \frac{c^4}{8\pi G} \left[ (\log \Inu)^2 \varphi^2 g_{\mu\nu} + \nabla_\mu \varphi \nabla_\nu \varphi - \frac{1}{2} g_{\mu\nu} \nabla_\alpha \varphi \nabla^\alpha \varphi \right]}
+
+% ---------- Titelseiten ----------
+\newcommand{\qrtitle}{The QR Theory v6.00: A Complete Synthesis of Quantum Mechanics and General Relativity through Projective Information Dynamics}
+\newcommand{\qrauthor}{Frank Kannstädter}
+\newcommand{\qraffiliation}{Independent Researcher in Theoretical Physics, Frankfurt am Main, Germany}
+
+% Abstract & Keywords
+\newenvironment{qrabstract}
+{\begin{quotation}\noindent\textbf{Abstract:}\space}
+{\end{quotation}}
+\newcommand{\qrkeywords}[1]{\noindent\textbf{Keywords:} #1}
+
+% Inhaltsverzeichnis-Tiefe
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+% Beschriftungen
+\captionsetup{
+  font=small,
+  labelfont=bf,
+  format=plain,
+  justification=centering
+}
+
+% QR-Axiome Umgebung
+\newenvironment{qraxiom}[1]
+{\begin{axiom}[#1]\itshape}
+{\end{axiom}}
+
+% Validierungstabellen
+\newcommand{\validationtable}[4]{%
+\begin{table}[H]
+\centering
+\caption{#1}
+\label{#2}
+\begin{tabular}{#3}
+#4
+\end{tabular}
+\end{table}
+}
+
+% Residuenplots
+\newcommand{\residualplot}[2]{%
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{#1}
+\caption{#2}
+\label{fig:residual}
+\end{figure}
+}
+
+% Warnungen filtern
+\usepackage{silence}
+\WarningFilter{siunitx}{Option "separate-uncertainty"}
+\WarningFilter{latex}{You have requested package}
+
+% TODO-Notizen
+\usepackage{todonotes}
+\newcommand{\qrtodo}[1]{\todo[color=yellow!40]{QR: #1}}
+
+% ---------- Finale Einstellungen ----------
+\raggedbottom
+\frenchspacing

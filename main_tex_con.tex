@@ -1,0 +1,100 @@
+% main.tex - QR Theory v6.00 Complete Synthesis
+% Konsolidierte Version aller Kapitel
+% Frank Kannstädter, 2025
+
+\documentclass[11pt,a4paper,twoside]{article}
+\input{macros}
+
+\begin{document}
+
+% Sprache explizit setzen (Abstract/Frontmatter auf Englisch)
+\selectlanguage{english}
+
+% Titelseite
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+
+{\Huge\bfseries \qrtitle\par}
+
+\vspace{2cm}
+
+{\Large \qrauthor\par}
+
+\vspace{1cm}
+
+{\large \qraffiliation\par}
+
+\vspace{3cm}
+
+{\large Version 6.00 \\ \today\par}
+
+\vspace{2cm}
+
+\begin{qrabstract}
+The QR (Quantum-Space Projection) theory presents a fundamental paradigm shift in theoretical physics by interpreting observed spacetime as a projective manifestation of a higher-dimensional information space $\mathcal{I}$. This comprehensive synthesis v6.00 achieves complete parameter reduction through axiomatic derivation and integrates string-theoretical corrections without dark matter requirements. The theory demonstrates that gravity emerges as a temporal property in a block-universal, fractal-informed cosmos, with all parameters ($\beta = 1$, $\gamma = (\log \Inu)^2$) derived axiomatically. Statistical analysis shows significant improvement over $\LCDM$ with $\Delta\chi^2 = 5.5$ ($p < 0.02$). Experimental predictions include gravitational wave dispersion $v_g(\omega) = c\bigl(1 - \frac{\alpha'}{2}\omega^2 g_s^{\chi(\mathcal{M})}\bigr)$, CMB B-mode corrections, and fractal structure signatures at characteristic scales $\lambda_n = \lpoi \cdot \varphi^n$. The theory successfully resolves the Hubble tension, explains rotation curves without dark matter, and provides testable predictions for future experiments including LISA, LiteBIRD, and Euclid.
+\end{qrabstract}
+
+\vspace{1cm}
+
+\qrkeywords{quantum gravity; information theory; projective geometry; block universe; fractal spacetime; dark matter alternative; cosmological tensions}
+
+\vfill
+
+\textit{Acknowledgments:} The author acknowledges critical review and feedback from Jochen Elleringmann.
+
+\end{titlepage}
+
+% Inhaltsverzeichnisse (bei twoside sauberer mit Seitenumbruch)
+\cleardoublepage
+\tableofcontents
+\cleardoublepage
+\listoffigures
+\cleardoublepage
+\listoftables
+\cleardoublepage
+
+% (Optional) Ab hier deutsch:
+% \selectlanguage{ngerman}
+
+% Hauptinhalt
+\input{chapters/01_introduction}
+\input{chapters/02_mathematical_foundation}
+\input{chapters/03_field_equations}
+\input{chapters/04_parameter_reduction}
+\input{chapters/05_string_corrections}
+\input{chapters/06_empirical_validation}
+\input{chapters/07_experimental_predictions}
+\input{chapters/08_comparison_theories}
+\input{chapters/09_discussion}
+\input{chapters/10_conclusions}
+
+% Anhänge
+\appendix
+\input{appendices/appendix_a_derivations}
+\input{appendices/appendix_b_numerical}
+\input{appendices/appendix_c_parameters}
+\input{appendices/appendix_d_validations}
+\input{chapters/two-sided_causality}
+% (einmal reicht)
+
+% Literaturverzeichnis
+\clearpage
+\printbibliography
+
+% Zusätzliche Informationen
+\section*{Version History}
+This document represents QR Theory version 6.00, consolidating and extending previous versions:
+\begin{itemize}
+  \item v5.83: Complete synthesis with parameter reduction and string corrections
+  \item v5.86: Enhanced derivation of $\Inu(t)$, BAO coupling, and shear pipeline
+  \item v6.00: Full integration with golden ratio fundamentality and complete consolidation
+\end{itemize}
+
+\section*{Data Availability Statement}
+All computational codes and derived data used in this study are provided in Appendix B. The numerical implementation is available for reproduction and verification of all presented results.
+
+\section*{Conflicts of Interest}
+doi and copyright
+
+\end{document}
