@@ -1,0 +1,47 @@
+name: Documentation & Release
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build Complete Documentation
+        run: |
+          python scripts/consolidate_latex.py
+          latexmk -pdf qr_theory_v6_complete.tex
+      
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.BLUE_QR_AUTOMATION }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: QR Theory ${{ github.ref }}
+          body: |
+            ## QR Theory Release ${{ github.ref }}
+            
+            Vollständige Dokumentation der Quantum-Relativity Theorie v6.00
+            
+            ### Wichtige Verbesserungen:
+            - Komplette Parameterreduktion erreicht
+            - String-theoretische Korrekturen integriert
+            - Empirische Validierung mit χ² Verbesserung
+            
+            ### Enthaltene Dokumente:
+            - Hauptdokument (qr_theory_v6_complete.pdf)
+            - Korrektur-Patches (corrections_v6.pdf) 
+            - Numerische Implementierung
+            - Validierungsberichte
+      
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ./qr_theory_v6_complete.pdf
+          asset_name: QR_Theory_v6.00_Complete.pdf
+          asset_content_type: application/pdf
