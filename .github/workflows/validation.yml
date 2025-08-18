@@ -1,0 +1,32 @@
+name: Scientific Validation
+on: [push, pull_request]
+
+jobs:
+  validate-calculations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install Dependencies
+        run: |
+          pip install numpy scipy matplotlib pandas
+          pip install jupyter nbformat nbconvert
+      
+      - name: Run Numerical Validations
+        run: |
+          python scripts/validate_qr_calculations.py
+          python scripts/empirical_validation.py
+          python scripts/parameter_consistency_check.py
+      
+      - name: Generate Validation Report
+        run: |
+          python scripts/generate_validation_report.py
+      
+      - name: Upload Validation Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-results
+          path: validation_report.html
