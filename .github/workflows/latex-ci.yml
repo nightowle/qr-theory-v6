@@ -10,11 +10,11 @@ on:
 jobs:
   build-latex:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      
+
     - name: Setup LaTeX
       uses: xu-cheng/latex-action@v3
       with:
@@ -32,12 +32,13 @@ jobs:
           todonotes silence
         pre_compile: |
           mkdir -p figures
-          mkdir -p chapters  
+          mkdir -p chapters
           mkdir -p appendices
           mkdir -p bibliography
         post_compile: |
-          ls -la *.pdf
-          
+          mv main_tex_con.pdf main.pdf
+          ls -lh main.pdf
+
     - name: Check PDF generation
       run: |
         if [ -f "main.pdf" ]; then
@@ -48,14 +49,14 @@ jobs:
           echo "❌ PDF generation failed"
           exit 1
         fi
-        
+
     - name: Upload PDF artifact
       uses: actions/upload-artifact@v4
       with:
         name: qr-theory-v6.00-pdf
         path: main.pdf
         retention-days: 30
-        
+
     - name: Upload build logs
       if: failure()
       uses: actions/upload-artifact@v4
