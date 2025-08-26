@@ -10,62 +10,51 @@ on:
 jobs:
   build-latex:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.BLUE_QR_AUTOMATION }}
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup LaTeX
-      uses: xu-cheng/latex-action@v3
-      with:
-        root_file: main_tex_con.tex
-        latexmk_shell_escape: true
-        latexmk_use_lualatex: false
-        latexmk_use_xelatex: false
-        extra_packages: |
-          amsmath amssymb amsthm mathtools physics
-          graphicx booktabs array multirow float
-          caption subcaption siunitx xcolor
-          hyperref cleveref biblatex microtype
-          csquotes geometry fancyhdr tensor
-          slashed algorithm algorithmic listings
-          todonotes silence
-        pre_compile: |
-          mkdir -p figures
-          mkdir -p chapters
-          mkdir -p appendices
-          mkdir -p bibliography
-        post_compile: |
-          mv main_tex_con.pdf main.pdf
-          ls -lh main.pdf
+      - name: Setup TeX Live
+        uses: teatimeguest/setup-texlive-action@v3
+        with:
+          packages: >-
+            latexmk texlive-latex-recommended texlive-latex-extra
+            texlive-fonts-recommended texlive-science texlive-bibtex-extra
 
-    - name: Check PDF generation
-      run: |
-        if [ -f "main.pdf" ]; then
-          echo "✅ PDF successfully generated"
-          ls -lh main.pdf
-          file main.pdf
-        else
-          echo "❌ PDF generation failed"
-          exit 1
-        fi
+      - name: Build PDF
+        run: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 
-    - name: Upload PDF artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: qr-theory-v6.00-pdf
-        path: main.pdf
-        retention-days: 30
+      - name: Check PDF generation
+        run: |
+          if [ -f "main.pdf" ]; then
+            echo "✅ PDF successfully generated"
+            ls -lh main.pdf
+            file main.pdf
+          else
+            echo "❌ PDF generation failed"
+            exit 1
+          fi
 
-    - name: Upload build logs
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: latex-build-logs
-        path: |
-          *.log
-          *.aux
-          *.blg
-          *.fls
-          *.fdb_latexmk
-        retention-days: 7
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qr-theory-v6.00-pdf
+          path: main.pdf
+          retention-days: 30
+
+      - name: Upload build logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex-build-logs
+          path: |
+            *.log
+            *.aux
+            *.blg
+            *.fls
+            *.fdb_latexmk
+          retention-days: 7
+

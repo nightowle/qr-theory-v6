@@ -5,6 +5,23 @@
 \documentclass[11pt,a4paper,twoside]{article}
 \input{macros}
 
+% Hilfsmakro zum Laden der Kapitel aus order.txt
+\newcount\chapterindex
+\newcommand{\loadchapters}[1]{%%
+  \chapterindex=0\relax
+  \newread\orderfile
+  \openin\orderfile=#1
+  \loop\unless\ifeof\orderfile
+    \read\orderfile to \chapterline
+    \unless\ifx\chapterline\empty
+      \advance\chapterindex by 1
+      \ifnum\chapterindex=11 \appendix\fi
+      \input{\chapterline}
+    \fi
+  \repeat
+  \closein\orderfile
+}
+
 \begin{document}
 
 % Sprache explizit setzen (Abstract/Frontmatter auf Englisch)
@@ -57,25 +74,8 @@ The QR (Quantum-Space Projection) theory presents a fundamental paradigm shift i
 % (Optional) Ab hier deutsch:
 % \selectlanguage{ngerman}
 
-% Hauptinhalt
-\input{chapters/01_introduction}
-\input{chapters/02_mathematical_foundation}
-\input{chapters/03_field_equations}
-\input{chapters/04_parameter_reduction}
-\input{chapters/05_string_corrections}
-\input{chapters/06_empirical_validation}
-\input{chapters/07_experimental_predictions}
-\input{chapters/08_comparison_theories}
-\input{chapters/09_discussion}
-\input{chapters/10_conclusions}
-
-% Anhänge
-\appendix
-\input{appendices/appendix_a_derivations}
-\input{appendices/appendix_b_numerical}
-\input{appendices/appendix_c_parameters}
-\input{appendices/appendix_d_validations}
-\input{chapters/two-sided_causality}
+% Hauptinhalt und Anhänge gemäß order.txt
+\loadchapters{order.txt}
 % (einmal reicht)
 
 % Literaturverzeichnis
