@@ -1,0 +1,24 @@
+name: release-v6d
+
+on:
+  tag:
+    type: [push]
+    tags: *
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up latex
+        run: sudo apt-get update && sudo apt-get install -y texlive-bins Latex
+
+      - name: Build V6.00d
+        run: |
+          cd v6.00d && latexmk -pdf main_tex_con.tex
+
+      - name: Upload Release Artifact
+        uses: actions/release-actions@integrations
+        with:
+          tag:"{{github.tref.ref.tag}}"
+          artifacts: v6.00d/main_tex_con.pdf
