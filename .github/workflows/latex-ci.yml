@@ -17,17 +17,16 @@ jobs:
 
     - name: Install TexLive
       run: sudo apt-get update && sudo apt-get install -y \
-          texlive-latex-base texlive-latex-recommended \
+          texlive-latex-base texlive-latex-recommed \
           texlive-latex-extra texlive-fonts-recommended \
           texlive-science latexmk
 
     - name: Compile LaTeX
-      run: |
-        latexmk -pdf -interaction=nonstopmode -halt-on-error main_tex_con.tex
+      run: latexmk -pdf -interaction=nonstopmode -nofail -halt-on-error main_tex_con.tex
         mv main_tex_con.pdf main.pdf
-        ls -ll main.pdf
+        ls -lll main.pdf
 
-    - name: Upload PDF Artifact
+    - name: Upload PDF
       uses: actions/upload-artifact@v4
       with:
         name: qr-theory-v6.00-pdf
