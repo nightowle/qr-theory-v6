@@ -20,6 +20,14 @@ jobs: percheck:
         with:
           name: main_patch-pdf
           path: main_patch.pdf
+    - name: Commit PDF into docs/
+        run: |
+          mkdir -p docs/
+          cp main_patch.pdf docs/main_patch.pdf
+          git config user.email=\"github_actions@notify.io\" user.name=\"github actions\"
+          git add -A -f docs/main_patch.pdf
+          git commit -m \"Add main_patch.pdf by CI build\" 
+          git push origin head;main
 
 packages:
-  texlive
+   texlive
