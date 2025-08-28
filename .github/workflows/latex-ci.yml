@@ -5,7 +5,6 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   build-latex:
@@ -15,49 +14,26 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup LaTeX
-      uses: xu-cheng/latex-action@v3
-      with:
-        root_file: main_tex_con.tex
-        latexmk_shell_escape: true
-        latexmk_use_lualatex: false
-        latexmk_use_xelatex: false
-        extra_packages: |
-          amsmath amssymb amsthm mathtools physics
-          graphicx booktabs array multirow float
-          caption subcaption siunitx xcolor
-          hyperref cleveref biblatex microtype
-          csquotes geometry fancyhdr tensor
-          slashed algorithm algorithmic listings
-          todonotes silence
-        pre_compile: |
-          mkdir -p figures
-          mkdir -p chapters
-          mkdir -p appendices
-          mkdir -p bibliography
-        post_compile: |
-          mv main_tex_con.pdf main.pdf
-          ls -lh main.pdf
+    - name: Install TexLive
+      run: sudo apt-get update && sudo apt-get install -y \
+          texlive-latex-base texlive-latex-recommended \
+          texlive-latex-extra texlive-fonts-recommended \
+          texlive-science latexmk
 
-    - name: Check PDF generation
+    - name: Compile LaTeX
       run: |
-        if [ -f "main.pdf" ]; then
-          echo "✅ PDF successfully generated"
-          ls -lh main.pdf
-          file main.pdf
-        else
-          echo "❌ PDF generation failed"
-          exit 1
-        fi
+        latexmk -pdf -interaction=nonstopmode -halt-on-error main_tex_con.tex
+        mv main_tex_con.pdf main.pdf
+        ls -lh main.pdf
 
-    - name: Upload PDF artifact
+    - name: Upload PDF Artifact
       uses: actions/upload-artifact@v4
       with:
         name: qr-theory-v6.00-pdf
         path: main.pdf
         retention-days: 30
 
-    - name: Upload build logs
+    - name: Upload Logs (on failure)
       if: failure()
       uses: actions/upload-artifact@v4
       with:
