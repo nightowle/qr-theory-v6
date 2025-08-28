@@ -1,0 +1,19 @@
+name: LaTex Build
+
+on:
+  push:
+    branches: [main, master]
+
+  pull_request:
+    branches: [main]
+
+jobs: percheck:
+  runs:
+    - name: Build main_patch.tex
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive fonts-lmod latex-extras heveatex lualatex
+        sudo pdflaetex --interaction=nonstopmode -halt-on-error main_patch.tex
+        ls -al
+packages:
+  texlive
