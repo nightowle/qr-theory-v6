@@ -9,39 +9,32 @@ on:
 
 jobs:
   build-latex:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install TexLive
-      run: sudo apt-get update && sudo apt-get install -y \
-          texlive-latex-base texlive-latex-recommed \
-          texlive-latex-extra texlive-fonts-recommended \
-          texlive-science latexmk
+      - name: Install TecLive (full)
+        run: sudo apt-get update && sudo apt-get install -y texlive-full latexmk
 
-    - name: Compile LaTeX
-      run: latexmk -pdf -interaction=nonstopmode -nofail -halt-on-error main_tex_con.tex
-        mv main_tex_con.pdf main.pdf
-        ls -lll main.pdf
+      - name: Compile LaTex
+        run: latexmk -pdf -interaction=nonstopmode -nofail -halt-on-error main_tex_con.tex
 
-    - name: Upload PDF
-      uses: actions/upload-artifact@v4
-      with:
-        name: qr-theory-v6.00-pdf
-        path: main.pdf
-        retention-days: 30
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: qr-theory-v6.00-pdf
+          path: main_tex_con.pdf
+          retention-days: 30
 
-    - name: Upload Logs (on failure)
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: latex-build-logs
-        path: |
-          *.log
-          *.aux
-          *.blg
-          *.fls
-          *.fdb_latexmk
-        retention-days: 7
+      - name: Upload Logs (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex-build-logs
+          path: |
+            *.log
+            *.aux
+            *.fls
+            *.fdb_latexmk
+          retention-days: 7
