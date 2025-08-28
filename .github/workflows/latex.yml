@@ -1,6 +1,10 @@
-name: LaTex Build (Legacy) 
+name: Legacy LaTeX Build (disabled)
 
 on:
   workflow_dispatch:
 
-# This workflow is a placeholder to disable the legacy build.
+jobs: 
+  skip:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This workflow is deprecated. Use 'latex-ci.yml' and 'deploy-latex.yml'."
