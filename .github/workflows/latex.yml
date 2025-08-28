@@ -1,2 +1,6 @@
-# Deprecated workflow: this file has been replaced by latex-ci.yml
-# It is kept as a placeholder to disable the legacy build.
+name: LaTex Build (Legacy) 
+
+on:
+  workflow_dispatch:
+
+# This workflow is a placeholder to disable the legacy build.
