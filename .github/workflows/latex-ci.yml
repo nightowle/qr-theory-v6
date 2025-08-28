@@ -5,6 +5,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build-latex:
@@ -24,7 +25,7 @@ jobs:
       run: |
         latexmk -pdf -interaction=nonstopmode -halt-on-error main_tex_con.tex
         mv main_tex_con.pdf main.pdf
-        ls -lh main.pdf
+        ls -ll main.pdf
 
     - name: Upload PDF Artifact
       uses: actions/upload-artifact@v4
