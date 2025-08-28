@@ -15,5 +15,11 @@ jobs: percheck:
         sudo apt-get install -y texlive fonts-lmod latex-extras heveatex lualatex
         sudo pdflaetex --interaction=nonstopmode -halt-on-error main_patch.tex
         ls -al
+    - name: Upload PCF Artefact
+        uses: actions/upload-artifact/@avtest
+        with:
+          name: main_patch-pdf
+          path: main_patch.pdf
+
 packages:
   texlive
