@@ -3,29 +3,27 @@ name: Deploy LaTeX PDF
 on:
   push:
     brances: [ main ]
-
-jobs:
+  workflow_dispatch:
+    
+jobs: 
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Install TexLive
-        run: sudo apt-get update && sudo apt-get install -y \J
+        run: sudo apt-get update && sudo apt-get install -y \
              texlive-latex-base texlive-latex-recommended \
-             texlive-latex-extra texlive-fonts-recommended \j             texlive-science latexmk
-
+             texlive-latex-extra texlive-fonts-recommended \
+            texlive-science latexmk 
       - name: Compile Main Document
         run: latexmk -pdf -interaction=nonstopmode -halt-on-error main_tex_con.tex
-
       - name: Upload PDF Artifact
         uses: actions/upload-artifact@v4
         with:
           name: qr-theory-v6.00-pdf
           path: main_tex_con.pdf
           retention-days: 30
-
       - name: Upload Logs (always)
         if: always()
         uses: actions/upload-artifact@v4
@@ -38,7 +36,6 @@ jobs:
             *.fls
             *.fdb_latexmk
           retention-days: 7
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
