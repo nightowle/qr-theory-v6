@@ -6,3 +6,27 @@
 [![B uild vN€Ã¤d](https://github.com/nightowle/qr-theory-v6/actions/workflows/build-v6d.yml/badge.svg)](https://github.com/nightowle/qr-theory-v6/actions/workflows/build-v6d.yml)
 [![Release vN€Ã¤d](https://img.shields.io/github/v/release/nightowle/qr-theory-v6.json.svg)](https://github.com/nightowle/qr-theory-v6/releases)
 ```
+
+## Lokale Automationsplattform
+
+Dieses Repository enthält nun eine erste Referenzimplementierung für die im Projektauftrag genannten Automationsziele:
+
+* `qr_automation.chat`: FastAPI-basierte Chatraum-Instanz mit Audit-Log (SQLite/JSONL) und WebSocket-Broadcasting.
+* `qr_automation.gateway`: Adapter-Gateway zum Anschluss verschiedener KI-Systeme (inklusive Echo-Referenzadapter).
+* `qr_automation.mcp`: MCP-Dienst mit Befehlsschlange und Dispatcher für Browser-, PowerShell- und Logging-Aktionen.
+* `qr_automation.cli`: Einstiegspunkt, um Chat-Server (`chat`) oder MCP-Dienst (`mcp`) lokal zu starten.
+
+Zum schnellen Testen empfiehlt sich ein virtuelles Environment:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .[dev]
+uvicorn qr_automation.chat.server:build_app --factory --host 127.0.0.1 --port 8000
+```
+
+Die Test-Suite deckt Persistenz, API-Fluss, Gateway-Dispatch und MCP-Ergebnisprotokollierung ab:
+
+```bash
+pytest
+```
