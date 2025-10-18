@@ -9,8 +9,9 @@ from fastapi import Depends, FastAPI, HTTPException, WebSocket, WebSocketDisconn
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from ..gateway.base import EchoAdapter
+from ..gateway.config import AdapterConfig, GatewayConfig
 from ..gateway.manager import GatewayManager, create_default_gateway
+from ..gateway.service import GatewayService
 from .audit import AuditLogger
 from .models import Agent, ChatMessage
 from .storage import ChatStorage, utcnow
@@ -78,10 +79,17 @@ class ConnectionManager:
 
 
 class Dependencies:
-    def __init__(self, storage: ChatStorage, audit: AuditLogger, gateway: GatewayManager) -> None:
+    def __init__(
+        self,
+        storage: ChatStorage,
+        audit: AuditLogger,
+        gateway: GatewayManager,
+        gateway_service: GatewayService,
+    ) -> None:
         self.storage = storage
         self.audit = audit
         self.gateway = gateway
+        self.gateway_service = gateway_service
         self.connections = ConnectionManager()
 
 
@@ -89,18 +97,39 @@ def build_app(
     storage_path: Path,
     audit_path: Path,
     gateway: Optional[GatewayManager] = None,
+    gateway_service: Optional[GatewayService] = None,
+    gateway_config: Optional[GatewayConfig] = None,
 ) -> FastAPI:
     storage = ChatStorage(storage_path)
     audit = AuditLogger(audit_path)
     gateway_manager = gateway or create_default_gateway()
 
+    config = gateway_config or GatewayConfig(
+        adapters=[
+            AdapterConfig(
+                name="echo",
+                implementation="qr_automation.gateway.base:EchoAdapter",
+            )
+        ]
+    )
+    service = gateway_service or GatewayService(gateway_manager, config)
+
     app = FastAPI(title="QR Local Communication Hub", version="0.1.0")
-    deps = Dependencies(storage=storage, audit=audit, gateway=gateway_manager)
+    deps = Dependencies(
+        storage=storage,
+        audit=audit,
+        gateway=gateway_manager,
+        gateway_service=service,
+    )
 
     @app.on_event("startup")
-    async def configure_gateway() -> None:
-        # EchoAdapter als sichere Fallback-Automation verfügbar machen
-        await deps.gateway.register_adapter(EchoAdapter("echo"))
+    async def start_gateway() -> None:
+        await deps.gateway_service.apply_config(config)
+        await deps.gateway_service.start()
+
+    @app.on_event("shutdown")
+    async def stop_gateway() -> None:
+        await deps.gateway_service.stop()
 
     app.add_middleware(
         CORSMiddleware,
@@ -189,7 +218,7 @@ def build_app(
         )
         if message.target_adapter:
             try:
-                response = await ctx.gateway.dispatch(message.target_adapter, message)
+                response = await ctx.gateway_service.submit(message.target_adapter, message)
             except ValueError as exc:
                 ctx.audit.log(
                     "gateway_error",

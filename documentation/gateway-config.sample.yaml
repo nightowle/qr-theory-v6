@@ -1,0 +1,37 @@
+# Beispielkonfiguration für den QR-Gateway-Service
+queue_size: 64
+concurrency: 4
+adapters:
+  - name: echo
+    implementation: qr_automation.gateway.base:EchoAdapter
+    protocols: [REST]
+  - name: openai
+    implementation: qr_automation.gateway.adapters.openai:OpenAIAdapter
+    protocols: [REST]
+    auth:
+      type: bearer
+      environment_variable: OPENAI_API_KEY
+    rate_limit:
+      capacity: 60
+      refill_rate: 1.0
+    cache:
+      enabled: true
+      ttl_seconds: 120
+      max_entries: 128
+    options:
+      model: gpt-4o-mini
+      timeout: 45
+  - name: llama-local
+    implementation: qr_automation.gateway.adapters.llamacpp:LlamaCppAdapter
+    protocols: [REST]
+    rate_limit:
+      capacity: 30
+      refill_rate: 0.5
+    cache:
+      enabled: true
+      ttl_seconds: 300
+      max_entries: 64
+    options:
+      base_url: http://127.0.0.1:8080
+      endpoint: /completion
+      max_tokens: 512
