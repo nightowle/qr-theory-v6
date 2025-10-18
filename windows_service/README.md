@@ -45,6 +45,37 @@ windows_service/
 
 Für lokale Tests kann das Projekt auch als Konsolenanwendung gestartet werden (`dotnet run`).
 
+## Setup.exe erstellen
+
+Ein automatisiertes Build-Skript erstellt alle Distributionsartefakte (veröffentlichte Binaries, MSI, Chocolatey-Paket und Setup.exe).
+
+```powershell
+cd deployment
+./build.ps1 -Configuration Release -OutputDirectory artifacts
+```
+
+Voraussetzungen für optionale Artefakte:
+
+| Artefakt        | Abhängigkeit                              |
+|-----------------|--------------------------------------------|
+| `qr-mcp-agent.msi` | [WiX Toolset 3.11](https://wixtoolset.org/) (`heat.exe`, `candle.exe`, `light.exe` im `WIX`-Pfad) |
+| `qr-mcp-agent-setup.exe` | [Inno Setup 6](https://jrsoftware.org/isinfo.php) (`ISCC.exe`, optional Umgebungsvariable `INNOSETUP`) |
+
+Das Skript erzeugt folgende Struktur im gewählten Output-Ordner:
+
+```
+artifacts/
+├── agent/                # veröffentlichte .NET-Binaries + Hilfsskripte
+├── agent.wxs/.wixobj     # temporäre WiX-Dateien
+├── qr-mcp-agent.msi      # MSI-Paket (falls WiX vorhanden)
+├── choco/                # vorbefülltes Chocolatey-Paket
+└── installer/
+    ├── qr-mcp-agent.generated.iss
+    └── qr-mcp-agent-setup.exe  # erzeugte Setup.exe (falls Inno Setup vorhanden)
+```
+
+Die Setup.exe registriert den Dienst automatisch mittels der mitgelieferten PowerShell-Skripte (`deployment/scripts/install-service.ps1` bzw. `uninstall-service.ps1`).
+
 ## Transportdetails
 
 ### Named Pipes
