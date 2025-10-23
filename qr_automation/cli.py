@@ -4,7 +4,7 @@ import argparse
 import asyncio
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Awaitable, Callable, TypeVar
 from uuid import uuid4
 
 import uvicorn
@@ -12,9 +12,12 @@ import uvicorn
 from .chat.server import build_app
 from .chat.storage import utcnow
 from .chat.models import ChatMessage
-from .gateway.config import load_gateway_config
+from .gateway.config import GatewayConfig, load_gateway_config
 from .gateway.manager import GatewayManager, create_default_gateway
 from .mcp.service import MCPService
+
+
+_T = TypeVar("_T")
 
 
 def parse_args() -> argparse.Namespace:
@@ -85,36 +88,43 @@ def main() -> None:
 
 async def handle_gateway_command(args: argparse.Namespace) -> None:
     config = load_gateway_config(args.config)
-    manager = GatewayManager()
     if args.gateway_command == "validate":
-        print(f"Konfiguration '{args.config}' ist gültig und definiert {len(config.adapters)} Adapter")
-    elif args.gateway_command == "list":
-        await manager.reload_from_config(config)
-        try:
+        print(
+            f"Konfiguration '{args.config}' ist gültig und definiert {len(config.adapters)} Adapter"
+        )
+        return
+
+    if args.gateway_command == "list":
+
+        async def _list(manager: GatewayManager) -> None:
             adapter_map = await manager.list_adapters()
             print("Registrierte Adapter:")
             for name, cls_name in adapter_map.items():
                 print(f"- {name}: {cls_name}")
-        finally:
-            await manager.shutdown()
-    elif args.gateway_command == "metrics":
-        await manager.reload_from_config(config)
-        try:
+
+        await _with_gateway_manager(config, _list)
+        return
+
+    if args.gateway_command == "metrics":
+
+        async def _metrics(manager: GatewayManager) -> None:
             snapshot = await manager.snapshot()
             print("Metriken:")
             for category, values in snapshot.items():
                 print(f"{category}:")
                 for key, value in values.items():
                     print(f"  {key}: {value}")
-        finally:
-            await manager.shutdown()
-    elif args.gateway_command == "dispatch":
-        await manager.reload_from_config(config)
+
+        await _with_gateway_manager(config, _metrics)
+        return
+
+    if args.gateway_command == "dispatch":
         try:
-            try:
-                metadata = _parse_metadata(args.metadata)
-            except ValueError as exc:
-                raise SystemExit(str(exc)) from exc
+            metadata = _parse_metadata(args.metadata)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
+
+        async def _dispatch(manager: GatewayManager) -> None:
             message = ChatMessage(
                 id=args.message_id or str(uuid4()),
                 room=args.room,
@@ -130,8 +140,11 @@ async def handle_gateway_command(args: argparse.Namespace) -> None:
                 print("Adapter lieferte keine Antwort.")
             else:
                 print(json.dumps(response, ensure_ascii=False, indent=2))
-        finally:
-            await manager.shutdown()
+
+        await _with_gateway_manager(config, _dispatch)
+        return
+
+    raise SystemExit(f"Unbekannter Gateway-Befehl: {args.gateway_command}")
 
 
 def _parse_metadata(raw: str | None) -> dict[str, Any]:
@@ -144,6 +157,18 @@ def _parse_metadata(raw: str | None) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError("Metadaten müssen ein JSON-Objekt sein")
     return value
+
+
+async def _with_gateway_manager(
+    config: GatewayConfig,
+    action: Callable[[GatewayManager], Awaitable[_T]],
+) -> _T:
+    manager = GatewayManager()
+    try:
+        await manager.reload_from_config(config)
+        return await action(manager)
+    finally:
+        await manager.shutdown()
 
 
 if __name__ == "__main__":
