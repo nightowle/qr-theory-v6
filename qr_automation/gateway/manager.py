@@ -128,6 +128,18 @@ class GatewayManager:
     async def snapshot(self) -> Dict[str, Dict[str, object]]:
         return await self._metrics.snapshot()
 
+    async def shutdown(self) -> None:
+        """Stoppt alle registrierten Adapter und leert die Registry."""
+
+        async with self._lock:
+            items = list(self._adapters.items())
+            self._adapters.clear()
+        for name, context in items:
+            try:
+                await context.adapter.stop()
+            except Exception:  # pragma: no cover - Schutz vor Stop-Fehlern
+                logger.warning("Adapter %s konnte nicht sauber gestoppt werden", name)
+
     async def reload_from_config(self, config: GatewayConfig) -> None:
         """Lädt Adapter gemäß Konfigurationsdatei nach (Hot-Swap)."""
 

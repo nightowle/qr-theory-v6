@@ -49,5 +49,5 @@ adapters:
     implementation: qr_automation.gateway.adapters.zapier:ZapierAdapter
     protocols: [REST, Zapier]
     options:
-      webhook_url: https://hooks.zapier.com/hooks/catch/000000/abcdef/
+      webhook_url_env: ZAPIER_WEBHOOK_URL
       timeout: 30

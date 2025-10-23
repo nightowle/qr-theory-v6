@@ -2,11 +2,16 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import json
 from pathlib import Path
+from typing import Any
+from uuid import uuid4
 
 import uvicorn
 
 from .chat.server import build_app
+from .chat.storage import utcnow
+from .chat.models import ChatMessage
 from .gateway.config import load_gateway_config
 from .gateway.manager import GatewayManager, create_default_gateway
 from .mcp.service import MCPService
@@ -36,6 +41,30 @@ def parse_args() -> argparse.Namespace:
     metrics_parser = gateway_sub.add_parser("metrics", help="Zeigt aktuelle Metriken")
     metrics_parser.add_argument("--config", required=True, help="Pfad zur Gateway-Konfiguration")
 
+    dispatch_parser = gateway_sub.add_parser(
+        "dispatch", help="Sendet eine Testnachricht an einen Adapter"
+    )
+    dispatch_parser.add_argument("--config", required=True, help="Pfad zur Gateway-Konfiguration")
+    dispatch_parser.add_argument("--adapter", required=True, help="Name des Zieladapters")
+    dispatch_parser.add_argument("--content", required=True, help="Nachrichteninhalt")
+    dispatch_parser.add_argument("--room", default="lab", help="Chatraum-Kennung")
+    dispatch_parser.add_argument("--sender-id", default="cli", help="Sender-ID")
+    dispatch_parser.add_argument(
+        "--sender-type",
+        default="system",
+        help="Sender-Typ (z. B. human, assistant, system)",
+    )
+    dispatch_parser.add_argument(
+        "--metadata",
+        default=None,
+        help="Optionales JSON-Objekt mit zusätzlichen Metadaten",
+    )
+    dispatch_parser.add_argument(
+        "--message-id",
+        default=None,
+        help="Optional vorgegebene Nachrichten-ID",
+    )
+
     return parser.parse_args()
 
 
@@ -61,18 +90,60 @@ async def handle_gateway_command(args: argparse.Namespace) -> None:
         print(f"Konfiguration '{args.config}' ist gültig und definiert {len(config.adapters)} Adapter")
     elif args.gateway_command == "list":
         await manager.reload_from_config(config)
-        adapter_map = await manager.list_adapters()
-        print("Registrierte Adapter:")
-        for name, cls_name in adapter_map.items():
-            print(f"- {name}: {cls_name}")
+        try:
+            adapter_map = await manager.list_adapters()
+            print("Registrierte Adapter:")
+            for name, cls_name in adapter_map.items():
+                print(f"- {name}: {cls_name}")
+        finally:
+            await manager.shutdown()
     elif args.gateway_command == "metrics":
         await manager.reload_from_config(config)
-        snapshot = await manager.snapshot()
-        print("Metriken:")
-        for category, values in snapshot.items():
-            print(f"{category}:")
-            for key, value in values.items():
-                print(f"  {key}: {value}")
+        try:
+            snapshot = await manager.snapshot()
+            print("Metriken:")
+            for category, values in snapshot.items():
+                print(f"{category}:")
+                for key, value in values.items():
+                    print(f"  {key}: {value}")
+        finally:
+            await manager.shutdown()
+    elif args.gateway_command == "dispatch":
+        await manager.reload_from_config(config)
+        try:
+            try:
+                metadata = _parse_metadata(args.metadata)
+            except ValueError as exc:
+                raise SystemExit(str(exc)) from exc
+            message = ChatMessage(
+                id=args.message_id or str(uuid4()),
+                room=args.room,
+                sender_id=args.sender_id,
+                sender_type=args.sender_type,
+                content=args.content,
+                metadata=metadata,
+                created_at=utcnow(),
+                target_adapter=args.adapter,
+            )
+            response = await manager.dispatch(args.adapter, message)
+            if response is None:
+                print("Adapter lieferte keine Antwort.")
+            else:
+                print(json.dumps(response, ensure_ascii=False, indent=2))
+        finally:
+            await manager.shutdown()
+
+
+def _parse_metadata(raw: str | None) -> dict[str, Any]:
+    if raw in (None, ""):
+        return {}
+    try:
+        value = json.loads(raw)
+    except json.JSONDecodeError as exc:  # pragma: no cover - CLI-Eingabefehler
+        raise ValueError(f"Metadaten sind kein gültiges JSON: {exc}") from exc
+    if not isinstance(value, dict):
+        raise ValueError("Metadaten müssen ein JSON-Objekt sein")
+    return value
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from typing import Any, Dict, Optional, TYPE_CHECKING
 
 import httpx
@@ -21,6 +22,10 @@ class ZapierAdapter(AgentAdapter):
         if config:
             options = dict(config.options)
         self.webhook_url: Optional[str] = options.get("webhook_url")
+        if self.webhook_url is None and "webhook_url_env" in options:
+            env_name = str(options["webhook_url_env"])
+            if env_name:
+                self.webhook_url = os.getenv(env_name) or None
         self.timeout: float = float(options.get("timeout", 30.0))
         client_options = options.get("client_options", {})
         if not isinstance(client_options, dict):
