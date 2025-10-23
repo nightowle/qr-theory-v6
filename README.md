@@ -12,7 +12,7 @@
 Dieses Repository enthält nun eine erste Referenzimplementierung für die im Projektauftrag genannten Automationsziele:
 
 * `qr_automation.chat`: FastAPI-basierte Chatraum-Instanz mit Audit-Log (SQLite/JSONL) und WebSocket-Broadcasting.
-* `qr_automation.gateway`: Adapter-Gateway mit Warteschlange, Rate-Limiting, Caching und Hot-Swap-Konfiguration für verschiedene KI-Systeme (inklusive Echo-, OpenAI- und Llama.cpp-Adapter).
+* `qr_automation.gateway`: Adapter-Gateway mit Warteschlange, Rate-Limiting, Caching und Hot-Swap-Konfiguration für verschiedene KI-Systeme (inklusive Echo-, OpenAI-/ChatGPT-, Zapier- und Llama.cpp-Adapter).
 * `qr_automation.mcp`: MCP-Dienst mit Befehlsschlange und Dispatcher für Browser-, PowerShell- und Logging-Aktionen.
 * `qr_automation.cli`: Einstiegspunkt, um Chat-Server (`chat`) oder MCP-Dienst (`mcp`) lokal zu starten.
 
