@@ -21,6 +21,16 @@ adapters:
     options:
       model: gpt-4o-mini
       timeout: 45
+  - name: chatgpt
+    implementation: qr_automation.gateway.adapters.chatgpt:ChatGPTAdapter
+    protocols: [REST, ChatGPT]
+    auth:
+      type: bearer
+      environment_variable: OPENAI_API_KEY
+    options:
+      model: gpt-4o-mini
+      temperature: 0.3
+      max_tokens: 512
   - name: llama-local
     implementation: qr_automation.gateway.adapters.llamacpp:LlamaCppAdapter
     protocols: [REST]
@@ -35,3 +45,9 @@ adapters:
       base_url: http://127.0.0.1:8080
       endpoint: /completion
       max_tokens: 512
+  - name: zapier-webhook
+    implementation: qr_automation.gateway.adapters.zapier:ZapierAdapter
+    protocols: [REST, Zapier]
+    options:
+      webhook_url: https://hooks.zapier.com/hooks/catch/000000/abcdef/
+      timeout: 30
