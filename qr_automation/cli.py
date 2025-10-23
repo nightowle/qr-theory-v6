@@ -2,13 +2,18 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import json
+import uuid
 from pathlib import Path
 
 import uvicorn
 
+from .chat.models import ChatMessage
 from .chat.server import build_app
+from .chat.storage import utcnow
 from .gateway.config import load_gateway_config
 from .gateway.manager import GatewayManager, create_default_gateway
+from .gateway.service import GatewayService
 from .mcp.service import MCPService
 
 
@@ -35,6 +40,30 @@ def parse_args() -> argparse.Namespace:
 
     metrics_parser = gateway_sub.add_parser("metrics", help="Zeigt aktuelle Metriken")
     metrics_parser.add_argument("--config", required=True, help="Pfad zur Gateway-Konfiguration")
+
+    send_parser = gateway_sub.add_parser(
+        "send",
+        help="Sendet eine Testnachricht über einen konfigurierten Adapter (z. B. Zapier)",
+    )
+    send_parser.add_argument("--config", required=True, help="Pfad zur Gateway-Konfiguration")
+    send_parser.add_argument("--adapter", required=True, help="Name des Zieladapters")
+    send_parser.add_argument("--message", required=True, help="Nachrichtentext")
+    send_parser.add_argument("--room", default="lab", help="Chat-Raumkennung (Default: lab)")
+    send_parser.add_argument(
+        "--sender-id",
+        default="cli",
+        help="Absenderkennung für das Audit-Protokoll (Default: cli)",
+    )
+    send_parser.add_argument(
+        "--sender-type",
+        default="system",
+        help="Absendertyp, z. B. human, system oder automation",
+    )
+    send_parser.add_argument(
+        "--metadata",
+        default="{}",
+        help="Optionale Zusatzinformationen als JSON-Dictionary",
+    )
 
     return parser.parse_args()
 
@@ -73,6 +102,43 @@ async def handle_gateway_command(args: argparse.Namespace) -> None:
             print(f"{category}:")
             for key, value in values.items():
                 print(f"  {key}: {value}")
+    elif args.gateway_command == "send":
+        try:
+            metadata = json.loads(args.metadata) if args.metadata else {}
+        except json.JSONDecodeError as exc:
+            print(f"Ungültiges JSON in --metadata: {exc}")
+            return
+        if not isinstance(metadata, dict):
+            print("--metadata muss ein JSON-Objekt (Dictionary) sein")
+            return
+
+        service = GatewayService(manager, config)
+        message = ChatMessage(
+            id=str(uuid.uuid4()),
+            room=args.room,
+            sender_id=args.sender_id,
+            sender_type=args.sender_type,
+            content=args.message,
+            metadata=metadata,
+            created_at=utcnow(),
+            target_adapter=args.adapter,
+        )
+
+        try:
+            response = await service.submit(args.adapter, message)
+        except Exception as exc:
+            print(f"Fehler beim Dispatch über Adapter '{args.adapter}': {exc}")
+            raise SystemExit(1) from exc
+        finally:
+            await service.stop()
+
+        print(f"Nachricht an Adapter '{args.adapter}' gesendet.")
+        if response is None:
+            print("Adapter lieferte keine Antwort (None).")
+        else:
+            formatted = json.dumps(response, indent=2, ensure_ascii=False)
+            print("Antwort:")
+            print(formatted)
 
 
 if __name__ == "__main__":
