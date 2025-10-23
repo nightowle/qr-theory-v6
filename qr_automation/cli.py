@@ -139,7 +139,7 @@ async def handle_gateway_command(args: argparse.Namespace) -> None:
             if response is None:
                 print("Adapter lieferte keine Antwort.")
             else:
-                print(json.dumps(response, ensure_ascii=False, indent=2))
+                print(json.dumps(response, ensure_ascii=False))
 
         await _with_gateway_manager(config, _dispatch)
         return
