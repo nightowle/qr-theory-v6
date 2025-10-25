@@ -30,6 +30,11 @@ Die Gateway-Konfiguration kann über YAML/JSON-Dateien gesteuert werden. Eine Be
 ```bash
 python -m qr_automation.cli gateway validate --config documentation/gateway-config.sample.yaml
 python -m qr_automation.cli gateway list --config documentation/gateway-config.sample.yaml
+ZAPIER_WEBHOOK_URL="https://hooks.zapier.com/hooks/catch/.../" \
+  python -m qr_automation.cli gateway dispatch \
+    --config documentation/gateway-config.sample.yaml \
+    --adapter zapier-webhook \
+    --content "Status-Check"
 ```
 
 Die Test-Suite deckt Persistenz, API-Fluss, Gateway-Dispatch und MCP-Ergebnisprotokollierung ab:

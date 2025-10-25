@@ -27,3 +27,8 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 include = ["qr_automation"]
+
+[tool.pytest.ini_options]
+markers = [
+    "asyncio: markiert Tests, die einen asyncio-Event-Loop benötigen",
+]
