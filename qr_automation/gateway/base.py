@@ -5,7 +5,6 @@ from typing import Any, Dict, Optional, Set, TYPE_CHECKING
 
 from ..chat.models import ChatMessage
 
-
 if TYPE_CHECKING:  # pragma: no cover - nur für Typprüfung relevant
     from .config import AdapterConfig
 
@@ -73,3 +72,11 @@ class EchoAdapter(AgentAdapter):
             "original_message_id": message.id,
             "content": f"Echo: {message.content}",
         }
+
+
+__all__ = [
+    "AgentAdapter",
+    "AdapterDispatchError",
+    "AdapterLifecycleError",
+    "EchoAdapter",
+]
