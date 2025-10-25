@@ -37,3 +37,21 @@ Die Test-Suite deckt Persistenz, API-Fluss, Gateway-Dispatch und MCP-Ergebnispro
 ```bash
 pytest
 ```
+
+## Windows-Executable erzeugen
+
+Für eine Windows-Distribution ohne Python-Laufzeit steht eine PyInstaller-
+Konfiguration zur Verfügung:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install .[build]
+pyinstaller deployment/pyinstaller/qr_automation_cli.spec --noconfirm
+```
+
+Das resultierende `qr-automation.exe` liegt nach dem Lauf unter
+`dist/qr-automation/`. Die ausführbare Datei stellt dieselben Subkommandos
+(`chat`, `mcp`, `gateway`) wie die Python-CLI bereit und enthält die
+Beispiel-Gateway-Konfiguration sowie das Projekt-README.
