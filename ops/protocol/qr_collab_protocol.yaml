@@ -1,0 +1,92 @@
+qr_collab_protocol:
+  project: "Quantum-Relativity Theory Optimization"
+  lead: "Frank Kannstädter"
+  purpose: "Axiomatisch-parameterfreie Vereinigung von Quantenmechanik und Allgemeiner Relativität über Projective Information Dynamics."
+
+  communication_rules:
+    - "Jede Nachricht beginnt mit einem Rollen-Tag: [Frank], [AI1], [AI2], [AI3], [AI4]."
+    - "Immer nur ein aktiver Sprecher pro Zyklus."
+    - "Antworten dürfen nur auf den letzten Tag des vorherigen Beitrags folgen."
+    - "Zusammenfassungen werden ausschließlich von AI1 oder AI2 erstellt."
+    - "Frank hat jederzeit Vorrang bei theoretischen Richtungsentscheidungen."
+
+  roles:
+    - name: "Frank"
+      role: "Creative Director"
+      tasks:
+        - "Definiert axiomatische Grundlage"
+        - "Lenkt Zielrichtung und erkennt inkonsistente Ansätze"
+    - name: "AI1"
+      role: "Theoretical Modeler"
+      tasks:
+        - "Formuliert und optimiert mathematische Modelle"
+        - "Dokumentiert rationale Herleitungen"
+    - name: "AI2"
+      role: "Experimental Validator"
+      tasks:
+        - "Vergleicht Modelle mit empirischen Daten"
+        - "Führt Peer-Review und Konsistenzprüfung durch"
+    - name: "AI3"
+      role: "Data Analyst"
+      tasks:
+        - "Bereitet Beobachtungsdaten auf (CMB, BAO, Rotationskurven)"
+        - "Berechnet numerische Vorhersagen"
+    - name: "AI4"
+      role: "Compiler & Archiv"
+      tasks:
+        - "Fasst den Chat-Verlauf als wissenschaftlichen Text zusammen"
+        - "Synchronisiert Inhalte mit GitHub und Overleaf"
+        - "Überwacht LaTeX-Build-Status"
+
+  workflow_cycle:
+    - step: "Idea_Proposal"
+      initiator: "Frank"
+      output: "Hypothese oder Axiom-Erweiterung"
+    - step: "Theoretical_Modeling"
+      initiator: "AI1"
+      output: "Mathematische Formulierung"
+    - step: "Validation_Review"
+      initiator: "AI2"
+      output: "Empirischer Abgleich, Peer-Review-Kommentar"
+    - step: "Data_Simulation"
+      initiator: "AI3"
+      output: "Numerische Simulationen / Diagramme"
+    - step: "Documentation_Build"
+      initiator: "AI4"
+      output: "LaTeX-PDF, GitHub-Commit, Build-Report"
+
+  automation_hooks:
+    zapier:
+      - trigger: "Slack message posted in #qr-theory"
+        actions:
+          - "Parse Role-Tag"
+          - "Forward to active AI endpoint"
+      - trigger: "GitHub commit in nightowle/qr-theory-v6"
+        actions:
+          - "Run Overleaf build"
+          - "Post PDF link to Slack thread"
+    github:
+      repository: "nightowle/qr-theory-v6"
+      branches:
+        - "main"
+        - "ai1-dev"
+        - "ai2-review"
+        - "ai4-build"
+    overleaf:
+      project: "QR_Theory_v6"
+      build_target: "main_tex_con.tex"
+
+  status_tracking:
+    system: "Jira"
+    states:
+      - "AI 1 Reviewing"
+      - "AI 2 Validating"
+      - "AI 3 Computing"
+      - "AI 4 Building"
+      - "Frank Reviewing"
+      - "Cycle Complete"
+
+  output_formats:
+    - "LaTeX → PDF"
+    - "Markdown → README.md"
+    - "JSON → project_status.json"
