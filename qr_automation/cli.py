@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import sys
 import uuid
 from pathlib import Path
 
@@ -106,11 +107,11 @@ async def handle_gateway_command(args: argparse.Namespace) -> None:
         try:
             metadata = json.loads(args.metadata) if args.metadata else {}
         except json.JSONDecodeError as exc:
-            print(f"Ungültiges JSON in --metadata: {exc}")
-            return
+            print(f"Ungültiges JSON in --metadata: {exc}", file=sys.stderr)
+            raise SystemExit(1) from exc
         if not isinstance(metadata, dict):
-            print("--metadata muss ein JSON-Objekt (Dictionary) sein")
-            return
+            print("--metadata muss ein JSON-Objekt (Dictionary) sein", file=sys.stderr)
+            raise SystemExit(1)
 
         service = GatewayService(manager, config)
         message = ChatMessage(
@@ -127,7 +128,7 @@ async def handle_gateway_command(args: argparse.Namespace) -> None:
         try:
             response = await service.submit(args.adapter, message)
         except Exception as exc:
-            print(f"Fehler beim Dispatch über Adapter '{args.adapter}': {exc}")
+            print(f"Fehler beim Dispatch über Adapter '{args.adapter}': {exc}", file=sys.stderr)
             raise SystemExit(1) from exc
         finally:
             await service.stop()
